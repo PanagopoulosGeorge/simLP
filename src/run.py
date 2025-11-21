@@ -5,7 +5,14 @@ from partitioner import partition_event_description
 from sys import argv
 import logging
 
-def parse_and_compute_distance(generated_rules_file, ground_rules_file, log_file='../logs/log.txt', generate_feedback=False):
+def parse_and_compute_distance(
+							   generated_event_description=None,
+							   ground_event_description=None,
+	                           generated_rules_file = None, 
+							   ground_rules_file = None, 
+							   log_file='../logs/log.txt', 
+							   generate_feedback=False,
+							   ):
 	
 	def setup_logger(log_file, level=logging.INFO):
 		"""To setup as many loggers as you want"""
@@ -27,19 +34,21 @@ def parse_and_compute_distance(generated_rules_file, ground_rules_file, log_file
 
 	rtec_parser1 = RTECParser()
 	parser = rtec_parser1.parser
-	 
-	# Transform the input RTEC programs into tokens, and then
-	# parse the tokens based on the grammar of the language of RTEC
-
-	with open(generated_rules_file) as f:
-		parser.parse(f.read())
+	if generated_event_description is None:
+		with open(generated_rules_file) as f:
+			parser.parse(f.read())
+	else:
+		parser.parse(generated_event_description)
 
 	generated_event_description = rtec_parser1.event_description
 
 	rtec_parser2 = RTECParser()
 	parser = rtec_parser2.parser
-	with open(ground_rules_file) as f:
-		parser.parse(f.read())
+	if ground_event_description is None:
+		with open(ground_rules_file) as f:
+			parser.parse(f.read())
+	else:
+		parser.parse(ground_event_description)
 
 	ground_event_description = rtec_parser2.event_description
 
@@ -113,10 +122,23 @@ def parse_and_compute_distance(generated_rules_file, ground_rules_file, log_file
 
 if __name__=="__main__":
 	# Required 
-	rules_file1 = "/Users/gphome/Desktop/projects/thesis-ds/simLP/unit_tests/test6/generated.prolog"
-	rules_file2 = "/Users/gphome/Desktop/projects/thesis-ds/simLP/unit_tests/test6/ground.prolog"
+	rules_file1 = """
+	initiatedAt(highSpeedNearCoast(Vessel) = true, T) :-
+    happensAt(velocity(Vessel, Speed), T),
+    holdsAt(nearCoast(Vessel) = true, T),
+    greater(Speed,5).
+
+	"""
+	rules_file2 = """
+	initiatedAt(highSpeedNearCoast(Vessel)=true, T):-
+    happensAt(velocity(Vessel, Speed, _, _), T),
+    greater(Speed, 5),
+    holdsAt(withinArea(Vessel, nearCoast)=true, T).
+
+
+	"""
 	# optional 
 	log_file = "/Users/gphome/Desktop/projects/thesis-ds/simLP/unit_tests/test6/log.txt"
 	generate_feedback = True
 	print(generate_feedback)
-	parse_and_compute_distance(rules_file1, rules_file2, log_file, generate_feedback)
+	parse_and_compute_distance(generated_event_description=rules_file1, ground_event_description=rules_file2, log_file=log_file, generate_feedback=generate_feedback)
