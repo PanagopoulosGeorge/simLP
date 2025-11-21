@@ -6,12 +6,9 @@ import numpy as np
 from scipy.optimize import linear_sum_assignment
 from copy import deepcopy
 import logging
+from atom_utils import atomIsVar, var_is_singleton, atomIsConst, atomIsComp, compute_var_routes, get_lists_size_and_pad
 
-def atomIsVar(atom):
-	return atom.predicateName[0].isupper() or atom.predicateName[0]=="_"
-
-def var_is_singleton(var, var_routes):
-	return var[0]=="_" or len(var_routes[var])==1
+# Moved to atom_utils.py to avoid circular imports
 
 def var_distance(var1, var2, var_routes1, var_routes2):
 	if var_is_singleton(var1, var_routes1) and var_is_singleton(var2, var_routes2):
@@ -24,14 +21,8 @@ def var_distance(var1, var2, var_routes1, var_routes2):
 	else:
 		return 1
 
-def atomIsConst(atom):
-	return (atom.predicateName[0].islower() or atom.predicateName[0]=="&" or atom.predicateName.isnumeric()) and len(atom.args)==0 
-
 def const_distance(const1, const2):
 	return 0 if const1 == const2 else 1
-
-def atomIsComp(atom):
-	return len(atom.args)>0
 
 def comp_atom_distance(atom1, atom2, var_routes1, var_routes2, logger):
 	''' We use the distance metric proposed by Nienhuys-Cheng (1997). '''
@@ -63,43 +54,7 @@ def pad_lists(list1, list2, pad_item):
 	elif len(list2)>len(list1):
 		pad_list(list1, len(list2)-len(list1))
 
-def get_lists_size_and_pad(list1, list2, pad_item):
-	def pad_list(mylist, n):
-		for _ in range(n):
-			mylist.append(pad_item)
-
-	if len(list1)==len(list2):
-		m = len(list1)
-		k = len(list1)
-	elif len(list1)>len(list2):
-		m = len(list1)
-		k = len(list2)
-		pad_list(list2, m-k)
-	elif len(list2)>len(list1):
-		m = len(list2)
-		k = len(list1)
-		pad_list(list1, m-k)
-
-	return m, k
-
-def compute_var_routes(rule):
-	var_routes = dict()
-	
-	def find_var_routes_in_atom(atom, route):
-		# For free variables, we do nothing.
-		if atom.predicateName[0].isupper(): 
-			if atom.predicateName in var_routes:
-				var_routes[atom.predicateName].append(route)
-			else:
-				var_routes[atom.predicateName] = [route]
-		else:
-			for arg_index in range(0, len(atom.args)):
-				find_var_routes_in_atom(atom.args[arg_index], route + [(atom.predicateName, arg_index)])
-
-	find_var_routes_in_atom(rule.head, list())
-	for atom in rule.body:
-		find_var_routes_in_atom(atom, list())
-	return var_routes
+# Moved to atom_utils.py to avoid circular imports
 
 
 def rule_distance(rule1, rule2, logger):
@@ -151,7 +106,7 @@ def rule_distance(rule1, rule2, logger):
 
 	return rule_distance
 
-def event_description_distance(event_description1, event_description2, logger):
+def event_description_distance(event_description1, event_description2, logger, generate_feedback=False):
 
 	rules1 = event_description1.rules
 	rules2 = event_description2.rules
@@ -202,7 +157,19 @@ def event_description_distance(event_description1, event_description2, logger):
 	logger.info("Definition Similarity: ")
 	logger.info(event_description_similarity)
 	logger.info("")
+	
+	# Generate feedback if requested
+	feedback_data = None
+	if generate_feedback:
+		# Import here to avoid circular dependency
+		from feedback_generator import FeedbackGenerator
+		feedback_gen = FeedbackGenerator(logger)
+		feedback_data = feedback_gen.generate_event_description_feedback(event_description1, event_description2)
+		formatted_feedback = feedback_gen.format_feedback_for_llm(feedback_data)
+		logger.info("\n\n=== AUTOMATED FEEDBACK FOR LLM ===\n")
+		logger.info(formatted_feedback)
+		logger.info("\n=== END OF FEEDBACK ===\n")
 
-	return col_ind, c_array[row_ind, col_ind], event_description_similarity
+	return col_ind, c_array[row_ind, col_ind], event_description_similarity, feedback_data
 
 

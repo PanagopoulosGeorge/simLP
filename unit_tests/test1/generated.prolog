@@ -3,3 +3,4 @@ initiatedAt(highSpeedNearCoast(Vessel) = true, T) :-
     holdsAt(nearCoast(Vessel) = true, T),
     greater(Speed,5).
 
+    

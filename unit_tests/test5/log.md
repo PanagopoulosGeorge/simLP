@@ -1,17 +1,16 @@
 Generated Definition: 
 terminatedAt(=(highSpeedNearCoast(Vessel),true),T) :- 
 	happensAt(velocity(Vessel,Speed),T),
-	leq(Speed,5).
+	-(holdsAt(=(nearCoast(Vessel),true),T)).
 
 
 Ground Definition: 
 terminatedAt(=(highSpeedNearCoast(Vessel),true),T) :- 
-	happensAt(velocity(Vessel,Speed,_,_),T),
-	leq(Speed,5).
+	happensAt(end(=(withinArea(Vessel,nearCoast),true)),T).
 
 
 Rule distances: 
-[[0.08333333]]
+[[0.59375]]
 
 
 Optimal Rule Assignment: 
@@ -21,25 +20,24 @@ Optimal Rule Assignment:
 We matched rule:
 terminatedAt(=(highSpeedNearCoast(Vessel),true),T) :- 
 	happensAt(velocity(Vessel,Speed),T),
-	leq(Speed,5).
+	-(holdsAt(=(nearCoast(Vessel),true),T)).
 
-which has the distance array: [0.08333333]
+which has the distance array: [0.59375]
 
 with the following rule: 
 terminatedAt(=(highSpeedNearCoast(Vessel),true),T) :- 
-	happensAt(velocity(Vessel,Speed,_,_),T),
-	leq(Speed,5).
+	happensAt(end(=(withinArea(Vessel,nearCoast),true)),T).
 
-Their distance is: 0.08333333333333333
+Their distance is: 0.59375
 
 
 
 Sum of distances for optimal rule assignment: 
-0.08333333333333333
+0.59375
 Distance between definitions: 
-0.08333333333333333
+0.59375
 Definition Similarity: 
-0.9166666666666666
+0.40625
 
 
 
@@ -49,33 +47,33 @@ Definition Similarity:
 
 ### Summary
 - Generated 1 rules (expected 1)
-- Average similarity: 91.67%
+- Average similarity: 40.62%
 
 ### Detailed Rule Feedback
 
-#### Rule 1 (Similarity: 91.67%)
+#### Rule 1 (Similarity: 40.62%)
 **Generated:**
 ```prolog
 terminatedAt(=(highSpeedNearCoast(Vessel),true),T) :- 
 	happensAt(velocity(Vessel,Speed),T),
-	leq(Speed,5).
+	-(holdsAt(=(nearCoast(Vessel),true),T)).
 ```
 **Expected:**
 ```prolog
 terminatedAt(=(highSpeedNearCoast(Vessel),true),T) :- 
-	happensAt(velocity(Vessel,Speed,_,_),T),
-	leq(Speed,5).
+	happensAt(end(=(withinArea(Vessel,nearCoast),true)),T).
 ```
 
 **Issues to fix:**
-- BODY: In atom 'happensAt(velocity(Vessel,Speed),T)': Missing 2 argument(s) in 'velocity' - expected 4 arguments but got 2
-- BODY: In atom 'happensAt(velocity(Vessel,Speed),T)': Consider adding underscore placeholders (_) for unused arguments in 'velocity'
+- BODY: In atom 'happensAt(velocity(Vessel,Speed),T)': Wrong predicate: expected 'end' but got 'velocity'
+- BODY: In atom '-(holdsAt(=(nearCoast(Vessel),true),T))': Atom: -(holdsAt(=(nearCoast(Vessel),true),T)) falsely defined in body
+- STRUCTURE: Extra 1 condition(s) in rule body
 
 
 === END OF FEEDBACK ===
 
 Computed similarity values: 
-{('highSpeedNearCoast', 'terminatedAt'): np.float64(0.9166666666666666)}
+{('highSpeedNearCoast', 'terminatedAt'): np.float64(0.40625)}
 
 Concepts defined in both event descriptions: 
 [('highSpeedNearCoast', 'terminatedAt')]
@@ -86,6 +84,6 @@ Concepts defined only in generated event description:
 Concepts defined only in ground event description: 
 []
 
-Similarity for definition: ('highSpeedNearCoast', 'terminatedAt') is 0.9166666666666666
+Similarity for definition: ('highSpeedNearCoast', 'terminatedAt') is 0.40625
 Event Description Similarity is: 
-0.9166666666666666
+0.40625

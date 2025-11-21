@@ -5,7 +5,7 @@ from partitioner import partition_event_description
 from sys import argv
 import logging
 
-def parse_and_compute_distance(generated_rules_file, ground_rules_file, log_file='../logs/log.txt'):
+def parse_and_compute_distance(generated_rules_file, ground_rules_file, log_file='../logs/log.txt', generate_feedback=False):
 	
 	def setup_logger(log_file, level=logging.INFO):
 		"""To setup as many loggers as you want"""
@@ -54,8 +54,15 @@ def parse_and_compute_distance(generated_rules_file, ground_rules_file, log_file
 	both_eds_keys = sorted(list(set(ground_ed_keys) & set(gen_ed_keys)))
 
 	similarities = dict()
+	all_feedback = dict() if generate_feedback else None
+	
 	for key in both_eds_keys:
-		optimal_matching, distances, similarity = event_description_distance(gen_ed_partitions[key], ground_ed_partitions[key], logger)
+		result = event_description_distance(gen_ed_partitions[key], ground_ed_partitions[key], logger, generate_feedback)
+		if generate_feedback:
+			optimal_matching, distances, similarity, feedback_data = result
+			all_feedback[key] = feedback_data
+		else:
+			optimal_matching, distances, similarity = result[:3]
 		similarities[key]=similarity
 
 	logger.info("Computed similarity values: ")
@@ -97,14 +104,19 @@ def parse_and_compute_distance(generated_rules_file, ground_rules_file, log_file
 	print(sum(similarities.values())/(len(both_eds_keys)+len(ground_ed_only_keys)))
 	logger.info("Event Description Similarity is: ")
 	logger.info(sum(similarities.values())/(len(both_eds_keys)+len(ground_ed_only_keys)))
-
-	return optimal_matching, distances, similarity
+	
+	if generate_feedback:
+		return optimal_matching, distances, similarity, all_feedback
+	else:
+		return optimal_matching, distances, similarity, 0
 
 
 if __name__=="__main__":
 	# Required 
-	rules_file1 = argv[1]
-	rules_file2 = argv[2]
+	rules_file1 = "/Users/gphome/Desktop/projects/thesis-ds/simLP/unit_tests/test6/generated.prolog"
+	rules_file2 = "/Users/gphome/Desktop/projects/thesis-ds/simLP/unit_tests/test6/ground.prolog"
 	# optional 
-	log_file = argv[3] if len(argv)>3 else '../logs/log.txt'
-	parse_and_compute_distance(rules_file1, rules_file2, log_file)
+	log_file = "/Users/gphome/Desktop/projects/thesis-ds/simLP/unit_tests/test6/log.txt"
+	generate_feedback = True
+	print(generate_feedback)
+	parse_and_compute_distance(rules_file1, rules_file2, log_file, generate_feedback)

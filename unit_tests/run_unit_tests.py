@@ -1,14 +1,19 @@
 import sys
+import os
 from os import walk
 
-sys.path.append("../src")
-
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.join(current_dir, "../src"))
 import run
 
 if __name__=="__main__":
-	subfolders = list(walk('.'))[0][1]
+	subfolder_names = [f for f in list(walk(current_dir))[0][1] if f != "__pycache__" and os.path.isdir(os.path.join(current_dir, f))]
+	subfolders = [os.path.join(current_dir, subfolder) for subfolder in subfolder_names if subfolder != "test6"]
 	for subfolder in sorted(subfolders):
-		matching, distances, similarity = run.parse_and_compute_distance(subfolder + "/generated.prolog", subfolder + "/ground.prolog", subfolder + "/log.txt")
+		print("--------------------------------")
+		print("Running unit test for: " + subfolder)
+		print("--------------------------------")
+		matching, distances, similarity, feedback = run.parse_and_compute_distance(subfolder + "/generated.prolog", subfolder + "/ground.prolog", subfolder + "/log.txt", generate_feedback=True)
 		print(subfolder)
 		print(matching)
 		print(distances)

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="bd061efe-5926-495f-a43c-231ca688f075" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/notebooks/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/feedback_loop.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/feedback_loop.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/feedback_loop_store_intermediates.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/feedback_loop_store_intermediates.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/visualization/demo.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/visualization/demo.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/visualization/rtec_visualization_system.py" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/visualization/rtec_visualization_system.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/visualization/visualizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/visualization/visualizer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/distance_metric.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/distance_metric.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Jupyter Notebook" />
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2z8ICErLTDnJvywrsDFMKKknpnV" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python tests.Python tests in difference_analyzer_tests.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python.distance_metric.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.evaluator.executor&quot;: &quot;Run&quot;,
+    &quot;Python.msa_requests.executor&quot;: &quot;Run&quot;,
+    &quot;Python.rtec_visualization_system.executor&quot;: &quot;Run&quot;,
+    &quot;Python.usage_example.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;explainability-feature&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/gphome/Desktop/projects/thesis-ds/simLP/notebooks&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/notebooks" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/notebooks/results/gemini-2,5-pro-results/1 retry" />
+      <recent name="$PROJECT_DIR$/notebooks/results/gemini-2,5-pro-results/no retries" />
+      <recent name="$PROJECT_DIR$/notebooks/results/gemini-2,5-pro-results/2 retries" />
+      <recent name="$PROJECT_DIR$/notebooks/results/gemini-2,5-pro/2 retries" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-b26f3e71634d-JavaScript-PY-251.26094.141" />
+        <option value="bundled-python-sdk-9f8e2b94138c-36ea0e71a18c-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.26094.141" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bd061efe-5926-495f-a43c-231ca688f075" name="Changes" comment="" />
+      <created>1751106143553</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1751106143553</updated>
+      <workItem from="1751106144581" duration="949000" />
+      <workItem from="1751179018177" duration="30767000" />
+      <workItem from="1751261648248" duration="35716000" />
+      <workItem from="1751648262643" duration="3472000" />
+      <workItem from="1751896786824" duration="1467000" />
+      <workItem from="1751903043268" duration="1677000" />
+      <workItem from="1751911608839" duration="27628000" />
+      <workItem from="1752742228065" duration="3464000" />
+      <workItem from="1753293822471" duration="38165000" />
+      <workItem from="1757591754596" duration="1066000" />
+      <workItem from="1757678863242" duration="1198000" />
+      <workItem from="1758887465675" duration="2397000" />
+      <workItem from="1759475040169" duration="635000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
+          <url>file://$PROJECT_DIR$/notebooks/tests.ipynb</url>
+          <line>67</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
+          <url>file://$PROJECT_DIR$/notebooks/tests.ipynb</url>
+          <line>71</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/distance_metric.py</url>
+          <line>396</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/usage_example.py</url>
+          <line>48</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/distance_metric.py</url>
+          <line>289</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/simLP$evaluator.coverage" NAME="evaluator Coverage Results" MODIFIED="1751216375729" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/notebooks" />
+    <SUITE FILE_PATH="coverage/simLP$msa_requests.coverage" NAME="msa_requests Coverage Results" MODIFIED="1751237355222" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/notebooks" />
+    <SUITE FILE_PATH="coverage/simLP$distance_metric.coverage" NAME="distance_metric Coverage Results" MODIFIED="1751649878147" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/simLP$.coverage" NAME=" Coverage Results" MODIFIED="1751108673702" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/simLP$rtec_visualization_system.coverage" NAME="rtec_visualization_system Coverage Results" MODIFIED="1753296175275" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/notebooks/visualization" />
+    <SUITE FILE_PATH="coverage/simLP$usage_example.coverage" NAME="usage_example Coverage Results" MODIFIED="1751650679895" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>
