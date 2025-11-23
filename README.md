@@ -22,8 +22,26 @@ This fork introduces an automated feedback generation mechanism that provides de
 The `distance_metric.py` module has been enhanced with optional feedback generation.
 
 ### Usage
+#### Option 1
+```
+# Clone the repository
+git clone https://github.com/PanagopoulosGeorge/simLP.git
+cd simLP
 
-To enable feedback generation when computing event description distances:
+# Install in editable mode (for development)
+pip install -e .
+
+# Or install normally
+pip install .
+```
+#### Option 2
+```
+# Build wheel and source distribution
+python -m build
+
+# Install from built package
+pip install dist/simlp-0.1.0-py3-none-any.whl
+```
 
 ```python
 from simlp import parse_and_compute_distance
