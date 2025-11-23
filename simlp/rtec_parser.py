@@ -1,9 +1,9 @@
-from rtec_lexer import *
+from .rtec_lexer import *
 from ply import yacc
 #from event_description import Atom
 #from propositional_logic import Proposition, Literal, ConjunctionOfLiterals, DNF
 #from dependency_graph import DependencyGraph
-from event_description import Atom, EventDescription
+from .event_description import Atom, EventDescription
 
 class RTECParser:
 	

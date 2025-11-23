@@ -1,7 +1,7 @@
-from rtec_lexer import RTECLexer
-from rtec_parser import RTECParser
-from distance_metric import event_description_distance
-from partitioner import partition_event_description
+from .rtec_lexer import RTECLexer
+from .rtec_parser import RTECParser
+from .distance_metric import event_description_distance
+from .partitioner import partition_event_description
 from sys import argv
 import logging
 
@@ -13,6 +13,71 @@ def parse_and_compute_distance(
 							   log_file='../logs/log.txt', 
 							   generate_feedback=False,
 							   ):
+	"""
+	Parse Prolog event descriptions and compute similarity metrics between them.
+	
+	Compare LLM-generated Prolog rules against ground truth definitions and 
+	provide automated feedback for rule refinement. 
+	
+	flag to enable detailed feedback generation:
+	generate_feedback = True.
+	
+	Args:
+		generated_event_description (str, optional): Raw Prolog code string for the
+			generated event description. If provided, this takes precedence over
+			generated_rules_file. Defaults to None.
+		ground_event_description (str, optional): Raw Prolog code string for the
+			ground truth event description. If provided, this takes precedence over
+			ground_rules_file. Defaults to None.
+		generated_rules_file (str, optional): Path to file containing generated
+			Prolog rules. Used only if generated_event_description is None.
+			Defaults to None.
+		ground_rules_file (str, optional): Path to file containing ground truth
+			Prolog rules. Used only if ground_event_description is None.
+			Defaults to None.
+		log_file (str, optional): Path to output log file where detailed comparison
+			results will be written. Defaults to '../logs/log.txt'.
+		generate_feedback (bool, optional): If True, generates detailed actionable
+			feedback for improving the generated rules. Defaults to False.
+	
+	Returns:
+		tuple: A 4-tuple containing:
+			- optimal_matching (np.ndarray): Optimal rule assignment indices from the
+			  last concept processed.
+			- distances (np.ndarray): Distance values for each matched rule pair from
+			  the last concept processed.
+			- similarity (float): Overall similarity score (0-1) for the last concept
+			  processed.
+			- all_feedback (dict or int): If generate_feedback=True, returns a dictionary
+			  mapping concept keys to their feedback data. If False, returns 0.
+	
+	Workflow:
+		1. Sets up logging to the specified log file
+		2. Parses both event descriptions using RTEC parser
+		3. Partitions event descriptions by concept (FVP definitions)
+		4. Computes similarity for each shared concept using event_description_distance
+		5. Identifies concepts unique to each event description
+		6. Calculates overall event description similarity across all concepts
+		7. Optionally generates and logs detailed feedback for rule improvement
+	
+	Example:
+		>>> # Using string input
+		>>> rules_gen = "initiatedAt(event(X)=true, T) :- condition(X, T)."
+		>>> rules_ground = "initiatedAt(event(X)=true, T) :- condition(X, T)."
+		>>> result = parse_and_compute_distance(
+		...     generated_event_description=rules_gen,
+		...     ground_event_description=rules_ground,
+		...     log_file='logs/comparison.txt',
+		...     generate_feedback=True
+		... )
+		
+		>>> # Using file input
+		>>> result = parse_and_compute_distance(
+		...     generated_rules_file='rules/generated.prolog',
+		...     ground_rules_file='rules/ground_truth.prolog',
+		...     generate_feedback=True
+		... )
+	"""
 	
 	def setup_logger(log_file, level=logging.INFO):
 		"""To setup as many loggers as you want"""

@@ -1,4 +1,4 @@
-from event_description import EventDescription
+from .event_description import EventDescription
 
 
 def get_defined_concept_key(atom):

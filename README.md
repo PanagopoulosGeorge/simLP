@@ -1,23 +1,51 @@
-# simLP: A Similarity Metric for Logic Programs
+# simLP - Fork with Automated Feedback Generation
 
-A Python program that calculates the syntactic similarity between two Prolog programs. This similarity metric has been employed in the following paper, which has been accepted at EDBT 2025.
+This is a fork of the original simLP project with enhanced functionality for automated feedback generation for LLM-generated Prolog rules.
 
-- Kouvaras A., Mantenoglou P., Artikis A., [Generating Activity Definitions with Large Language Models](https://openproceedings.org/2025/conf/edbt/paper-295.pdf)
+## What's New in This Fork
 
-In this work, we used our metric to assess the quality of LLM-generated logic programs, specifying composite activity definitions in the language of the composite activity recognition framework [RTEC](https://github.com/aartikis/rtec), by comparing them with hand-crafted ones.
+### Added Feedback Generation System
 
-# License
+This fork introduces an automated feedback generation mechanism that provides detailed, actionable feedback when comparing LLM-generated Prolog rules against ground truth definitions.
 
-This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; See the [GNU General Public License v3 for more details](https://www.gnu.org/licenses/gpl-3.0.en.html).
+#### Key Enhancement: Feedback Generator Module
 
-# Feedback 
+`feedback_generator.py` module under the `src/` directory that:
 
-For more information and feedback, do not hesitate sending us an [email](periklismant1@gmail.com) or adding an issue in this repository.
+- **Analyzes atom-level differences** between generated and expected Prolog atoms
+- **Provides structured feedback** on rule heads, bodies, structure, and variable usage
+- **Generates comprehensive reports** for entire event descriptions
+- **Formats feedback** in a clear, LLM-consumable format
 
+#### Integration with Distance Metric
 
-# Related Software
-- [RTEC](https://github.com/aartikis/rtec): Run-Time Event Calculus. RTEC is an Event Calculus implementation optimised for stream reasoning. 
-- [iRTEC](https://github.com/eftsilio/Incremental_RTEC): Incremental RTEC. iRTEC supports incremental reasoning, handling efficiently the delays and retractions in data streams.
-- [oPIEC](https://github.com/Periklismant/oPIEC): Online Probabilistic Interval-Based Event Calculus. oPIEC supports Event Calculus reasoning over data streams under uncertainty.
-- [Wayeb](https://github.com/ElAlev/Wayeb): Wayeb is a Complex Event Processing and Forecasting (CEP/F) engine written in Scala. It is based on symbolic automata and Markov models.
+The `distance_metric.py` module has been enhanced with optional feedback generation.
 
+### Usage
+
+To enable feedback generation when computing event description distances:
+
+```python
+from simlp import parse_and_compute_distance
+
+# Set generate_feedback=True to get automated feedback
+print(help(parse_and_compute_distance))
+```
+
+### Feedback Output
+
+The feedback generator produces structured output including:
+
+- **Rule-by-rule analysis** with similarity scores
+- **Detailed issue identification** for heads, bodies, structure, and variables
+- **Overall recommendations** for improving rule generation
+- **Summary statistics** comparing generated vs. expected rules
+
+### Files Added/Modified
+
+- **New:** `src/feedback_generator.py` - Complete feedback generation system
+- **Modified:** `src/distance_metric.py` - Added optional feedback generation parameter and integration
+
+---
+
+For the original project documentation, see [README_main.md](README_main.md).

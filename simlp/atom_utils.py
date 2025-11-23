@@ -1,7 +1,7 @@
 # Utility functions for atom analysis
 # Extracted from distance_metric.py to avoid circular imports
 
-from event_description import Atom
+from .event_description import Atom
 
 def atomIsVar(atom):
     return atom.predicateName[0].isupper() or atom.predicateName[0]=="_"

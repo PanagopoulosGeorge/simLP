@@ -1,8 +1,8 @@
 # Automated feedback generator for LLM-generated Prolog rules
 # Provides detailed, actionable feedback based on distance metric analysis
 
-from event_description import Atom, Rule, EventDescription
-from atom_utils import (
+from .event_description import Atom, Rule, EventDescription
+from .atom_utils import (
     atomIsVar, atomIsConst, atomIsComp, 
     compute_var_routes, get_lists_size_and_pad
 )
@@ -13,7 +13,7 @@ import logging
 
 # Import atom_distance separately to avoid circular import
 def get_atom_distance():
-    from distance_metric import atom_distance
+    from .distance_metric import atom_distance
     return atom_distance
 
 class RuleFeedback:

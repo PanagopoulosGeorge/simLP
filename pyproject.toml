@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "simlp"
+version = "0.1.0"
+description = "Similarity metric for logic programs with automated feedback generation"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [
+    {name = "George Panagopoulos", email = "panagopoulos.georgios@hotmail.com"}
+]
+dependencies = [
+    "ply",
+    "numpy",
+    "scipy",
+]
+
+[tool.setuptools.packages.find]
+include = ["simlp"]
+
+[project.urls]
+Homepage = "https://github.com/PanagopoulosGeorge"
+Repository = "https://github.com/PanagopoulosGeorge/simLP"

@@ -1,12 +1,12 @@
 # Extension of a distance metric between ground logical atoms (see expression (9) in SPLICE paper)
 # in order to measure the distance between logical programs.
 
-from event_description import Atom, Rule
+from .event_description import Atom, Rule
 import numpy as np
 from scipy.optimize import linear_sum_assignment
 from copy import deepcopy
 import logging
-from atom_utils import atomIsVar, var_is_singleton, atomIsConst, atomIsComp, compute_var_routes, get_lists_size_and_pad
+from .atom_utils import atomIsVar, var_is_singleton, atomIsConst, atomIsComp, compute_var_routes, get_lists_size_and_pad
 
 # Moved to atom_utils.py to avoid circular imports
 
@@ -107,6 +107,55 @@ def rule_distance(rule1, rule2, logger):
 	return rule_distance
 
 def event_description_distance(event_description1, event_description2, logger, generate_feedback=False):
+	"""
+	Calculate the distance between two event descriptions (sets of Prolog rules).
+	
+	This function computes a normalized distance metric between two event descriptions
+	by finding the optimal matching between their rules using the Hungarian algorithm
+	(linear sum assignment). The distance is based on pairwise rule distances computed
+	using structural and semantic similarity metrics.
+	
+	Args:
+		event_description1 (EventDescription): The first event description (typically LLM-generated).
+		event_description2 (EventDescription): The second event description (typically ground truth).
+		logger (logging.Logger): Logger instance for recording detailed comparison information.
+		generate_feedback (bool, optional): If True, generates detailed actionable feedback
+			for improving the generated rules. Defaults to False.
+	
+	Returns:
+		tuple: A 4-tuple containing:
+			- col_ind (np.ndarray): Array of indices representing the optimal rule matching.
+				col_ind[i] indicates which rule in event_description2 is matched to rule i 
+				in event_description1.
+			- distances (np.ndarray): Array of distances for each matched rule pair.
+			- event_description_similarity (float): Overall similarity score between 0 and 1,
+				where 1 indicates identical event descriptions and 0 indicates maximum distance.
+			- feedback_data (dict or None): If generate_feedback=True, contains structured
+				feedback including rule-by-rule analysis, summary statistics, and recommendations.
+				None if generate_feedback=False.
+	
+	Algorithm:
+		1. Pads the rule lists to equal length using dummy rules if necessary
+		2. Computes pairwise rule distances forming a cost matrix
+		3. Applies Hungarian algorithm to find optimal rule assignment
+		4. Calculates normalized distance as: distance = (1/m) * sum(optimal_distances)
+		5. Optionally generates detailed feedback for rule improvements
+	
+	Notes:
+		- The function uses dummy rules (with head "_dummy_rule") for padding when the
+		  event descriptions have different numbers of rules.
+		- Distance is normalized by the number of rules (m) to ensure comparability.
+		- Similarity is computed as: similarity = 1 - distance
+		- When generate_feedback=True, detailed feedback is logged and returned for
+		  LLM-based rule refinement.
+	
+	Example:
+		>>> from distance_metric import event_description_distance
+		>>> col_ind, distances, similarity, feedback = event_description_distance(
+		...     generated_ed, ground_ed, logger, generate_feedback=True
+		... )
+		>>> print(f"Similarity: {similarity:.2%}")
+	"""
 
 	rules1 = event_description1.rules
 	rules2 = event_description2.rules
