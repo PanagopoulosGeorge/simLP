@@ -99,21 +99,29 @@ def parse_and_compute_distance(
 
 	rtec_parser1 = RTECParser()
 	parser = rtec_parser1.parser
-	if generated_event_description is None:
-		with open(generated_rules_file) as f:
-			parser.parse(f.read())
-	else:
-		parser.parse(generated_event_description)
+	try:
+		if generated_event_description is None:
+			with open(generated_rules_file) as f:
+				parser.parse(f.read())
+		else:
+			parser.parse(generated_event_description)
+	except Exception as e:
+		logger.error(f"Error parsing generated event description: {e}")
+		return None, None, None, None
 
 	generated_event_description = rtec_parser1.event_description
 
 	rtec_parser2 = RTECParser()
 	parser = rtec_parser2.parser
-	if ground_event_description is None:
-		with open(ground_rules_file) as f:
-			parser.parse(f.read())
-	else:
-		parser.parse(ground_event_description)
+	try:
+		if ground_event_description is None:
+			with open(ground_rules_file) as f:
+				parser.parse(f.read())
+		else:
+			parser.parse(ground_event_description)
+	except Exception as e:
+		logger.error(f"Error parsing ground event description: {e}")
+		return None, None, None, None
 
 	ground_event_description = rtec_parser2.event_description
 
