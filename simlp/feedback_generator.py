@@ -199,7 +199,7 @@ class FeedbackGenerator:
         m, k = get_lists_size_and_pad(rules1, rules2, Rule(Atom("_dummy_rule", []), []))
         
         # Compute distances for optimal matching
-        from distance_metric import rule_distance
+        from .distance_metric import rule_distance
         c_array = np.array([[0.0 for _ in range(m)] for _ in range(m)])
         for i in range(m):
             for j in range(m):

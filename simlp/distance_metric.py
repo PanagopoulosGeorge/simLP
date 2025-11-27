@@ -211,7 +211,7 @@ def event_description_distance(event_description1, event_description2, logger, g
 	feedback_data = None
 	if generate_feedback:
 		# Import here to avoid circular dependency
-		from feedback_generator import FeedbackGenerator
+		from .feedback_generator import FeedbackGenerator
 		feedback_gen = FeedbackGenerator(logger)
 		feedback_data = feedback_gen.generate_event_description_feedback(event_description1, event_description2)
 		formatted_feedback = feedback_gen.format_feedback_for_llm(feedback_data)
