@@ -48,7 +48,7 @@ def parse_and_compute_distance(
 			  the last concept processed.
 			- similarity (float): Overall similarity score (0-1) for the last concept
 			  processed.
-			- all_feedback (dict or int): If generate_feedback=True, returns a dictionary
+			- all_feedback str: If generate_feedback=True, returns a dictionary
 			  mapping concept keys to their feedback data. If False, returns 0.
 	
 	Workflow:
@@ -136,13 +136,13 @@ def parse_and_compute_distance(
 	both_eds_keys = sorted(list(set(ground_ed_keys) & set(gen_ed_keys)))
 
 	similarities = dict()
-	all_feedback = dict() if generate_feedback else None
+	all_feedback = ""
 	
 	for key in both_eds_keys:
 		result = event_description_distance(gen_ed_partitions[key], ground_ed_partitions[key], logger, generate_feedback)
 		if generate_feedback:
 			optimal_matching, distances, similarity, feedback_data = result
-			all_feedback[key] = feedback_data
+			all_feedback += "\n".join(feedback_data['overall_recommendations'])
 		else:
 			optimal_matching, distances, similarity = result[:3]
 		similarities[key]=similarity
@@ -154,64 +154,73 @@ def parse_and_compute_distance(
 	logger.info("Concepts defined in both event descriptions: ")
 	logger.info(both_eds_keys)
 	logger.info("")
-	print("Concepts defined in both event descriptions: ")
-	print(both_eds_keys)
-	print("")
+	# print("Concepts defined in both event descriptions: ")
+	# print(both_eds_keys)
+	# print("")
 
 	gen_ed_only_keys = list(set(gen_ed_keys) - set(ground_ed_keys))
 	logger.info("Concepts defined only in generated event description: ")
 	logger.info(gen_ed_only_keys)
 	logger.info("")
-	print("Concepts defined only in generated event description: ")
-	print(gen_ed_only_keys)
-	print("")
+	# print("Concepts defined only in generated event description: ")
+	# print(gen_ed_only_keys)
+	# print("")
 
 	ground_ed_only_keys = list(set(ground_ed_keys) - set(gen_ed_keys))
 	logger.info("Concepts defined only in ground event description: ")
 	logger.info(ground_ed_only_keys)
 	logger.info("")
-	print("Concepts defined only in ground event description: ")
-	print(ground_ed_only_keys)
-	print("")
+	# print("Concepts defined only in ground event description: ")
+	# print(ground_ed_only_keys)
+	# print("")
 
 
 	for key in ground_ed_only_keys:
 		similarities[key]=0
 
 	for key in similarities:
-		print("Similarity for definition: " + str(key) + " is " + str(similarities[key]))
+		# print("Similarity for definition: " + str(key) + " is " + str(similarities[key]))
 		logger.info("Similarity for definition: " + str(key) + " is " + str(similarities[key]))
 
-	print("Event Description Similarity is: ")
-	print(sum(similarities.values())/(len(both_eds_keys)+len(ground_ed_only_keys)))
+	# print("Event Description Similarity is: ")
+	average_similarity = sum(similarities.values())/(len(both_eds_keys)+len(ground_ed_only_keys))
+	# print(average_similarity)
 	logger.info("Event Description Similarity is: ")
 	logger.info(sum(similarities.values())/(len(both_eds_keys)+len(ground_ed_only_keys)))
 	
 	if generate_feedback:
-		return optimal_matching, distances, similarity, all_feedback
+		return optimal_matching, distances, average_similarity, all_feedback
 	else:
-		return optimal_matching, distances, similarity, 0
+		return optimal_matching, distances, average_similarity, 0
 
 
 if __name__=="__main__":
 	# Required 
 	rules_file1 = """
-	initiatedAt(highSpeedNearCoast(Vessel) = true, T) :-
-    happensAt(velocity(Vessel, Speed), T),
-    holdsAt(nearCoast(Vessel) = true, T),
-    greater(Speed,5).
+	initiatedAt(gap(Vessel)=nearPorts, T) :-
+		happensAt(gap_start(Vessel), T),
+		holdsAt(withinArea(Vessel, nearPorts)=true, T).
+
+	terminatedAt(gap(Vessel)=_Status, T) :-
+		happensAt(gap_end(Vessel), T).
 
 	"""
 	rules_file2 = """
-	initiatedAt(highSpeedNearCoast(Vessel)=true, T):-
-    happensAt(velocity(Vessel, Speed, _, _), T),
-    greater(Speed, 5),
-    holdsAt(withinArea(Vessel, nearCoast)=true, T).
+	initiatedAt(gap(Vessel)=nearPorts, T) :-
+		happensAt(gap_start(Vessel), T),
+		holdsAt(withinArea(Vessel, nearPorts)=true, T).
 
+	initiatedAt(gap(Vessel)=farFromPorts, T) :-
+		happensAt(gap_start(Vessel), T),
+		not holdsAt(withinArea(Vessel, nearPorts)=true, T).
 
+	terminatedAt(gap(Vessel)=_Status, T) :-
+		happensAt(gap_end(Vessel), T).
 	"""
 	# optional 
 	log_file = "/Users/gphome/Desktop/projects/thesis-ds/simLP/unit_tests/test6/log.txt"
 	generate_feedback = True
 	print(generate_feedback)
-	parse_and_compute_distance(generated_event_description=rules_file1, ground_event_description=rules_file2, log_file=log_file, generate_feedback=generate_feedback)
+	result = parse_and_compute_distance(generated_event_description=rules_file1, ground_event_description=rules_file2, log_file=log_file, generate_feedback=generate_feedback)
+	print("similarity: ", result[2])
+	print("feedback: ", result[3])
