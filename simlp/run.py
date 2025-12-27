@@ -183,7 +183,11 @@ def parse_and_compute_distance(
 		result = event_description_distance(gen_ed_partitions[key], ground_ed_partitions[key], logger, generate_feedback)
 		if generate_feedback:
 			optimal_matching, distances, similarity, feedback_data = result
-			all_feedback += "\n".join(feedback_data['overall_recommendations'])
+			# Import FeedbackGenerator to format the full feedback
+			from .feedback_generator import FeedbackGenerator
+			feedback_gen = FeedbackGenerator(logger)
+			formatted_feedback = feedback_gen.format_feedback_for_llm(feedback_data)
+			all_feedback += formatted_feedback + "\n"
 		else:
 			optimal_matching, distances, similarity = result[:3]
 		similarities[key]=similarity
@@ -248,19 +252,17 @@ def parse_and_compute_distance(
 if __name__=="__main__":
 	# Required 
 	rules_file2 = """
-	initiatedAt(gap(Vessel)=nearPorts, T) :-
-		happensAt(gap_start(Vessel), T),
-		holdsAt(withinArea(Vessel, nearPorts)=true, T).
-
-	terminatedAt(gap(Vessel)=_Status, T) :-
-		happensAt(gap_end(Vessel), T).
-
-	"""
+    initiatedAt(highSpeedNearCoast(Vessel) = true, T) :-
+        happensAt(velocity(Vessel, Speed), T),
+        holdsAt(nearCoast(Vessel) = true, T),
+        greater(Speed, 5).
+    """
 	rules_file1 = """
-	holdsFor(gap(Vessel)=nearPorts, T) :-
-		happensAt(gap_start(Vessel), T),
-		holdsAt(withinArea(Vessel, nearPorts)=true, T).
-	"""
+    initiatedAt(highSpeedNearCoast(Vessel) = true, T) :-
+        happensAt(velocity(Vessel, Speed, _, _), T),
+        greater(Speed, 5),
+        holdsAt(withinArea(Vessel, nearCoast) = true, T).
+    """
 	# optional 
 	log_file = "/Users/gphome/Desktop/projects/thesis-ds/simLP/unit_tests/test6/log.txt"
 	generate_feedback = True

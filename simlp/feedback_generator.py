@@ -307,8 +307,8 @@ class FeedbackGenerator:
             output.append(f"#### Rule {i} (Similarity: {1 - rule_fb['distance']:.2%})")
             output.append(f"**Generated:**")
             output.append(f"```prolog\n{rule_fb['generated_rule'].strip()}\n```")
-            output.append(f"**Expected:**")
-            output.append(f"```prolog\n{rule_fb['ground_rule'].strip()}\n```")
+            # output.append(f"**Expected:**")
+            # output.append(f"```prolog\n{rule_fb['ground_rule'].strip()}\n```")
             
             # Collect all feedback
             all_issues = []
