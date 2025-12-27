@@ -55,6 +55,52 @@ class FeedbackGenerator:
     
     def __init__(self, logger=None):
         self.logger = logger or logging.getLogger(__name__)
+    
+    def generate_fluent_type_feedback(self, mismatch):
+        """Generate detailed feedback for fluent definition type mismatch.
+        
+        This method provides guidance when a fluent is incorrectly defined as a 
+        simple fluent (using initiatedAt/terminatedAt) instead of a statically 
+        determined fluent (using holdsFor), or vice versa.
+        
+        Args:
+            mismatch: Dictionary containing:
+                - fluent_name: Name of the mismatched fluent
+                - generated_type: 'simple' or 'static'
+                - ground_type: 'simple' or 'static'
+                - generated_keys: List of partition keys used in generated description
+                - ground_keys: List of partition keys used in ground truth
+        
+        Returns:
+            str: Detailed feedback message explaining the error and how to fix it
+        """
+        fluent_name = mismatch['fluent_name']
+        gen_type = mismatch['generated_type']
+        ground_type = mismatch['ground_type']
+        
+        if ground_type == 'static':
+            return (
+                f"CRITICAL FLUENT TYPE ERROR: Fluent '{fluent_name}' is incorrectly defined.\n"
+                f"  - Current (wrong): Simple fluent using initiatedAt/terminatedAt predicates\n"
+                f"  - Expected (correct): Statically determined fluent using holdsFor/2 predicate\n\n"
+                f"  Explanation: Statically determined fluents compute their intervals directly from "
+                f"conditions that hold over time, rather than through discrete initiation and termination "
+                f"events. The holdsFor/2 predicate defines when the fluent holds based on temporal "
+                f"conditions.\n\n"
+                f"  To fix: Replace your initiatedAt/terminatedAt rules with a holdsFor rule that "
+                f"specifies when {fluent_name} holds based on the relevant conditions."
+            )
+        else:
+            return (
+                f"CRITICAL FLUENT TYPE ERROR: Fluent '{fluent_name}' is incorrectly defined.\n"
+                f"  - Current (wrong): Statically determined fluent using holdsFor predicate\n"
+                f"  - Expected (correct): Simple fluent using initiatedAt/2 and terminatedAt/2 predicates\n\n"
+                f"  Explanation: Simple fluents are event-driven, meaning their state changes are "
+                f"triggered by specific events. You need to define when the fluent starts (initiatedAt) "
+                f"and when it ends (terminatedAt).\n\n"
+                f"  To fix: Replace your holdsFor rule with separate initiatedAt and terminatedAt rules "
+                f"that specify the events triggering the start and end of {fluent_name}."
+            )
         
     def analyze_atom_difference(self, gen_atom, ground_atom, context=""):
         """Analyze differences between two atoms and generate specific feedback"""

@@ -1,7 +1,7 @@
 from .rtec_lexer import RTECLexer
 from .rtec_parser import RTECParser
 from .distance_metric import event_description_distance
-from .partitioner import partition_event_description
+from .partitioner import partition_event_description, find_fluent_type_mismatches
 from sys import argv
 import logging
 
@@ -135,8 +135,49 @@ def parse_and_compute_distance(
 
 	both_eds_keys = sorted(list(set(ground_ed_keys) & set(gen_ed_keys)))
 
+	# Check for fluent type mismatches (simple defined vs statically determined fluents)
+	fluent_type_mismatches = find_fluent_type_mismatches(gen_ed_keys, ground_ed_keys)
+
 	similarities = dict()
 	all_feedback = ""
+	
+	# Initialize variables to avoid UnboundLocalError when no shared keys exist
+	optimal_matching = None
+	distances = None
+	
+	# Log and generate feedback for fluent type mismatches
+	if fluent_type_mismatches:
+		logger.info("=" * 60)
+		logger.info("FLUENT DEFINITION TYPE MISMATCHES DETECTED:")
+		logger.info("=" * 60)
+		for mismatch in fluent_type_mismatches:
+			fluent_name = mismatch['fluent_name']
+			gen_type = mismatch['generated_type']
+			ground_type = mismatch['ground_type']
+			gen_predicates = [k[1] for k in mismatch['generated_keys']]
+			ground_predicates = [k[1] for k in mismatch['ground_keys']]
+			
+			logger.info(f"  Fluent '{fluent_name}':")
+			logger.info(f"    Generated uses: {gen_type} definition ({', '.join(gen_predicates)})")
+			logger.info(f"    Ground uses: {ground_type} definition ({', '.join(ground_predicates)})")
+			
+			# Add to feedback
+			if generate_feedback:
+				if ground_type == 'static':
+					all_feedback += (f"\n - FLUENT TYPE ERROR: Fluent '{fluent_name}' should be defined as a "
+								   f"statically determined fluent using holdsFor/2, not as a simple fluent "
+								   f"using {', '.join(gen_predicates)}. Statically determined fluents compute "
+								   f"their intervals directly from conditions rather than through initiation/termination events.")
+				else:
+					all_feedback += (f"\n - FLUENT TYPE ERROR: Fluent '{fluent_name}' should be defined as a "
+								   f"simple fluent using initiatedAt/2 and terminatedAt/2, not as a statically "
+								   f"determined fluent using {', '.join(gen_predicates)}. Simple fluents are "
+								   f"event-driven with explicit initiation and termination conditions.")
+			
+			# Assign 0 similarity for mismatched fluent types
+			for key in mismatch['generated_keys']:
+				similarities[key] = 0
+		logger.info("")
 	
 	for key in both_eds_keys:
 		result = event_description_distance(gen_ed_partitions[key], ground_ed_partitions[key], logger, generate_feedback)
@@ -182,11 +223,21 @@ def parse_and_compute_distance(
 		# print("Similarity for definition: " + str(key) + " is " + str(similarities[key]))
 		logger.info("Similarity for definition: " + str(key) + " is " + str(similarities[key]))
 
+	# Calculate denominator for average similarity
+	# Include: shared concepts + ground-only concepts + mismatched fluent types (from ground side)
+	num_ground_concepts = len(both_eds_keys) + len(ground_ed_only_keys)
+	# Add ground keys from fluent type mismatches (these are concepts that exist but with wrong definition type)
+	for mismatch in fluent_type_mismatches:
+		for key in mismatch['ground_keys']:
+			if key not in similarities:
+				similarities[key] = 0
+				num_ground_concepts += 1
+
 	# print("Event Description Similarity is: ")
-	average_similarity = sum(similarities.values())/(len(both_eds_keys)+len(ground_ed_only_keys))
+	average_similarity = sum(similarities.values()) / num_ground_concepts if num_ground_concepts > 0 else 0
 	# print(average_similarity)
 	logger.info("Event Description Similarity is: ")
-	logger.info(sum(similarities.values())/(len(both_eds_keys)+len(ground_ed_only_keys)))
+	logger.info(average_similarity)
 	
 	if generate_feedback:
 		return optimal_matching, distances, average_similarity, all_feedback
@@ -196,7 +247,7 @@ def parse_and_compute_distance(
 
 if __name__=="__main__":
 	# Required 
-	rules_file1 = """
+	rules_file2 = """
 	initiatedAt(gap(Vessel)=nearPorts, T) :-
 		happensAt(gap_start(Vessel), T),
 		holdsAt(withinArea(Vessel, nearPorts)=true, T).
@@ -205,17 +256,10 @@ if __name__=="__main__":
 		happensAt(gap_end(Vessel), T).
 
 	"""
-	rules_file2 = """
-	initiatedAt(gap(Vessel)=nearPorts, T) :-
+	rules_file1 = """
+	holdsFor(gap(Vessel)=nearPorts, T) :-
 		happensAt(gap_start(Vessel), T),
 		holdsAt(withinArea(Vessel, nearPorts)=true, T).
-
-	initiatedAt(gap(Vessel)=farFromPorts, T) :-
-		happensAt(gap_start(Vessel), T),
-		not holdsAt(withinArea(Vessel, nearPorts)=true, T).
-
-	terminatedAt(gap(Vessel)=_Status, T) :-
-		happensAt(gap_end(Vessel), T).
 	"""
 	# optional 
 	log_file = "/Users/gphome/Desktop/projects/thesis-ds/simLP/unit_tests/test6/log.txt"
